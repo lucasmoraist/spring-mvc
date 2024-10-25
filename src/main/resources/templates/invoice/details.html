@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Document</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+      .jumbotron {
+        padding: 2rem 1rem;
+        margin-bottom: 2rem;
+        background-color: #e9ecef;
+        border-radius: 0.3rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="jumbotron mb-0">
+        <div class="container">
+          <h1 class="display-4">Detalhes da Nota</h1>
+        </div>
+      </div>
+      <nav
+        class="navbar navbar-expand navbar-light bg-light d-flex justify-content-between mb-3"
+      >
+        <div class="navbar-nav">
+          <a href="/" class="nav-item nav-link active">Notas</a>
+          <a href="/invoice/form" class="nav-item nav-link">Cadastrar Nota</a>
+        </div>
+      </nav>
+
+      <div class="card">
+        <div class="card-body">
+          <div class="mb-3">
+            <strong>Nome:</strong>
+            <span th:text="${invoice.name}" class="ml-2">Nome do Cliente</span>
+          </div>
+          <div class="mb-3">
+            <strong>Número da Invoice:</strong>
+            <span th:text="${invoice.nInvoice}" class="ml-2"
+              >Número da Invoice</span
+            >
+          </div>
+          <div class="mb-3">
+            <strong>Endereço:</strong>
+            <span th:text="${invoice.address}" class="ml-2"
+              >Endereço do Cliente</span
+            >
+          </div>
+          <div class="mb-3">
+            <strong>CNPJ:</strong>
+            <span th:text="${invoice.cnpj}" class="ml-2">CNPJ do Cliente</span>
+          </div>
+          <div class="mb-3">
+            <strong>Data:</strong>
+            <span th:text="${invoice.date}" class="ml-2">Data da Invoice</span>
+          </div>
+          <div class="mb-3">
+            <strong>Valor:</strong>
+            <span th:text="${invoice.amount}" class="ml-2"
+              >Valor da Invoice</span
+            >
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-4 text-center">
+        <a th:href="@{/}" class="btn btn-primary" title="Voltar para a lista">
+          <i class="fas fa-arrow-left"></i>
+        </a>
+        <a
+          th:href="@{/invoice/edit/{id}(id=${invoice.id})}"
+          class="btn btn-warning"
+          title="Editar"
+        >
+          <i class="fas fa-edit"></i>
+        </a>
+        <a
+          th:href="@{/invoice/delete/{id}(id=${invoice.id})}"
+          class="btn btn-danger"
+          title="Excluir"
+        >
+          <i class="fas fa-trash-alt"></i>
+        </a>
+      </div>
+    </div>
+  </body>
+</html>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script>
+  function formattedDate(date) {
+    const [year, month, day] = date.split("-");
+    return `${day}/${month}/${year}`;
+  }
+
+  function formattedAmount(amount) {
+    const value = parseFloat(amount);
+    return `R$ ${value.toLocaleString("pt-BR", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    })}`;
+  }
+
+  document.addEventListener("DOMContentLoaded", function () {
+    const dateElements = document.querySelectorAll(".date");
+    const amountElements = document.querySelectorAll(".amount");
+
+    dateElements.forEach((element) => {
+      const originalDate = element.getAttribute("data-date");
+      if (originalDate) {
+        element.textContent = formattedDate(originalDate);
+      }
+    });
+
+    amountElements.forEach((element) => {
+      const originalAmount = element.getAttribute("data-amount");
+      if (originalAmount) {
+        element.textContent = formattedAmount(originalAmount);
+      }
+    });
+  });
+</script>

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Document</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    />
+    <style>
+      .jumbotron {
+        padding: 2rem 1rem;
+        margin-bottom: 2rem;
+        background-color: #e9ecef;
+        border-radius: 0.3rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="jumbotron mb-0">
+        <div class="container">
+          <h1 class="display-4">Cadastrar Nota</h1>
+        </div>
+      </div>
+      <nav
+        class="navbar navbar-expand navbar-light bg-light d-flex justify-content-between mb-3"
+      >
+        <div class="navbar-nav">
+          <a href="/" class="nav-item nav-link">Notas</a>
+          <a href="/invoice/form" class="nav-item nav-link active"
+            >Cadastrar Nota</a
+          >
+        </div>
+      </nav>
+
+      <div class="card mt-3">
+        <form
+          action="/invoice/save"
+          class="card-body d-flex flex-column gap-3"
+          method="post"
+          th:object="${invoiceRequest}"
+        >
+          <div class="form-group">
+            <label for="name">Nome</label>
+            <input
+              type="text"
+              class="form-control"
+              id="name"
+              placeholder="Digite o nome aqui"
+              th:field="*{name}"
+              th:errorclass="is-invalid"
+            />
+            <div th:errors="*{name}" class="invalid-feedback"></div>
+          </div>
+
+          <div class="form-group">
+            <label for="nInvoice">Nº da Nota</label>
+            <input
+              type="text"
+              class="form-control"
+              id="nInvoice"
+              placeholder="Digite o nº da nota"
+              th:field="*{nInvoice}"
+              th:errorclass="is-invalid"
+            />
+            <div th:errors="*{nInvoice}" class="invalid-feedback"></div>
+          </div>
+
+          <div class="form-group">
+            <label for="address">Endereço</label>
+            <input
+              type="text"
+              class="form-control"
+              id="address"
+              placeholder="Digite o endereço"
+              th:field="*{address}"
+              th:errorclass="is-invalid"
+            />
+            <div th:errors="*{address}" class="invalid-feedback"></div>
+          </div>
+
+          <div class="form-group">
+            <label for="cnpj">CNPJ</label>
+            <input
+              type="text"
+              class="form-control"
+              id="cnpj"
+              placeholder="Digite o CNPJ"
+              th:field="*{cnpj}"
+              th:errorclass="is-invalid"
+            />
+            <div th:errors="*{cnpj}" class="invalid-feedback"></div>
+          </div>
+
+          <div class="form-group">
+            <label for="date">Data</label>
+            <input
+              type="text"
+              class="form-control"
+              id="date"
+              th:field="*{date}"
+              th:errorclass="is-invalid"
+              placeholder="dd/mm/yyyy"
+            />
+            <div th:errors="*{date}" class="invalid-feedback"></div>
+          </div>
+
+          <div class="form-group">
+            <label for="amount">Valor</label>
+            <input
+              type="text"
+              class="form-control"
+              id="amount"
+              placeholder="Digite o valor da nota"
+              th:field="*{amount}"
+              th:errorclass="is-invalid"
+            />
+            <div th:errors="*{amount}" class="invalid-feedback"></div>
+          </div>
+
+          <div>
+            <a
+              th:href="@{/}"
+              class="btn btn-primary"
+              title="Voltar para a lista"
+            >
+              <i class="fas fa-arrow-left"></i>
+            </a>
+            <button type="submit" class="btn btn-primary align-self-start">
+              Registrar
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script>
+  document.getElementById("date").addEventListener("input", function () {
+    let date = this.value.replace(/\D/g, "");
+    if (date.length >= 2) {
+      date = date.slice(0, 2) + "/" + date.slice(2);
+    }
+    if (date.length >= 5) {
+      date = date.slice(0, 5) + "/" + date.slice(5, 9);
+    }
+    this.value = date;
+  });
+
+  document.getElementById("cnpj").addEventListener("input", function () {
+    let cnpj = this.value.replace(/\D/g, "");
+    if (cnpj.length <= 14) {
+      cnpj = cnpj.replace(/^(\d{2})(\d)/, "$1.$2");
+      cnpj = cnpj.replace(/^(\d{2})\.(\d{3})(\d)/, "$1.$2.$3");
+      cnpj = cnpj.replace(/\.(\d{3})(\d)/, ".$1/$2");
+      cnpj = cnpj.replace(/(\d{4})(\d)/, "$1-$2");
+    }
+    this.value = cnpj;
+  });
+
+  document.getElementById("nInvoice").addEventListener("input", function () {
+    let nInvoice = this.value.replace(/\D/g, "");
+    if (nInvoice.length <= 9) {
+      nInvoice = nInvoice.replace(/^(\d{3})(\d)/, "$1.$2");
+      nInvoice = nInvoice.replace(/^(\d{3})\.(\d{3})(\d)/, "$1.$2.$3");
+      nInvoice = nInvoice.replace(/\.(\d{3})(\d)/, ".$1-$2");
+    }
+    this.value = nInvoice;
+  });
+
+  document.getElementById("amount").addEventListener("input", function () {
+    let amount = this.value.replace(/\D/g, "");
+    if (amount.length >= 3) {
+      amount = amount.slice(0, -2) + "," + amount.slice(-2);
+    }
+    if (amount.length >= 7) {
+      amount = amount.slice(0, -6) + "." + amount.slice(-6);
+    }
+    if (amount.length >= 11) {
+      amount = amount.slice(0, -10) + "." + amount.slice(-10);
+    }
+    this.value = `R$ ${amount}`;
+  });
+</script>

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Document</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    />
+    <style>
+      .jumbotron {
+        padding: 2rem 1rem;
+        margin-bottom: 2rem;
+        background-color: #e9ecef;
+        border-radius: 0.3rem;
+      }
+      .column {
+        width: 200px;
+      }
+
+      .colums {
+        width: 100px;
+      }
+      .truncate {
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        max-width: 150px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="jumbotron mb-0">
+        <div class="container">
+          <h1 class="display-4">Sistema de Notas</h1>
+        </div>
+      </div>
+      <nav
+        class="navbar navbar-expand navbar-light bg-light d-flex justify-content-between mb-3"
+      >
+        <div class="navbar-nav">
+          <a href="/" class="nav-item nav-link active">Notas</a>
+          <a href="/invoice/save" class="nav-item nav-link">Cadastrar Nota</a>
+        </div>
+        <form class="d-flex" role="search" th:action="@{/find}" method="post">
+          <input
+            class="form-control mr-2"
+            type="search"
+            placeholder="Buscar"
+            name="term"
+            id="term"
+          />
+          <button class="btn btn-outline-success" type="submit">Buscar</button>
+        </form>
+      </nav>
+
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col" class="column">Nome</th>
+            <th scope="col" class="colums">Nº Nota Físcal</th>
+            <th scope="col" class="colums">Endereço</th>
+            <th scope="col" class="colums">CNPJ</th>
+            <th scope="col" class="colums">Data</th>
+            <th scope="col" class="colums">Valor</th>
+            <th scope="col" class="colums">Ações</th>
+          </tr>
+        </thead>
+        <tbody class="table-group-divider">
+          <tr th:each="invoice : ${invoice}">
+            <td class="truncate">
+              <a
+                th:href="@{/invoice/details/{id}(id=${invoice.id})}"
+                th:text="${invoice.name}"
+                >teste</a
+              >
+            </td>
+            <td class="truncate" th:text="${invoice.nInvoice}">2109201290192</td>
+            <td class="truncate" th:text="${invoice.address}">Rua 11</td>
+            <td class="truncate" th:text="${invoice.cnpj}">
+              10.200.333/0001-23
+            </td>
+            <td class="date truncate" th:attr="data-date=${invoice.date}">
+              2024-10-21
+            </td>
+            <td class="amount truncate" th:attr="data-amount=${invoice.amount}">
+              100.00
+            </td>
+            <td style="text-align: center">
+              <div class="text-center">
+                <a
+                  th:href="@{/invoice/edit/{id}(id=${invoice.id})}"
+                  class="btn btn-warning"
+                  title="Editar"
+                >
+                  <i class="fas fa-edit"></i>
+                </a>
+                <a
+                  th:href="@{/invoice/delete/{id}(id=${invoice.id})}"
+                  class="btn btn-danger"
+                  title="Excluir"
+                >
+                  <i class="fas fa-trash-alt"></i>
+                </a>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </body>
+</html>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script>
+  function formattedDate(date) {
+    const [year, month, day] = date.split("-");
+    return `${day}/${month}/${year}`;
+  }
+
+  function formattedAmount(amount) {
+    const value = parseFloat(amount);
+    return `R$ ${value.toLocaleString("pt-BR", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    })}`;
+  }
+
+  document.addEventListener("DOMContentLoaded", function () {
+    const dateElements = document.querySelectorAll(".date");
+    const amountElements = document.querySelectorAll(".amount");
+
+    dateElements.forEach((element) => {
+      const originalDate = element.getAttribute("data-date");
+      if (originalDate) {
+        element.textContent = formattedDate(originalDate);
+      }
+    });
+
+    amountElements.forEach((element) => {
+      const originalAmount = element.getAttribute("data-amount");
+      if (originalAmount) {
+        element.textContent = formattedAmount(originalAmount);
+      }
+    });
+  });
+</script>
